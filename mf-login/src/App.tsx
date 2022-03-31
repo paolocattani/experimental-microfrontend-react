@@ -1,24 +1,53 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
 
 function App() {
+  const [username, setUsername] = useState<string>();
+  const [password, setPassword] = useState<string>();
+  const [log, setLog] = useState<string>();
+
+  const onSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
+    event.preventDefault();
+    if (username && password) {
+      sessionStorage.setItem('username', username);
+      sessionStorage.setItem('password', password);
+      setLog('Login complete');
+    } else {
+      setLog('Insert username and password');
+    }
+    setUsername('');
+    setPassword('');
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+    <div className='App'>
+      <header className='App-header'>
+        <p>This is the public login page</p>
       </header>
+      <body style={{ margin: '1vh' }}>
+        <form onSubmit={onSubmit}>
+          <input
+            type='text'
+            placeholder='username'
+            value={username}
+            onChange={(e) => {
+              setUsername(e.target.value);
+            }}
+          />
+          <input
+            type='text'
+            placeholder='password'
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
+          />
+          <button type='submit'>Login</button>
+        </form>
+        <p>
+          {log} : {sessionStorage.getItem('username')} , {sessionStorage.getItem('password')}
+        </p>
+      </body>
     </div>
   );
 }
