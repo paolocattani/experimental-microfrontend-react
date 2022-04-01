@@ -20,6 +20,7 @@ const paths = require('./paths');
 const modules = require('./modules');
 const getClientEnvironment = require('./env');
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
+const ExternalTemplateRemotesPlugin = require("external-remotes-plugin");
 const ForkTsCheckerWebpackPlugin =
   process.env.TSC_COMPILE_ON_ERROR === 'true'
     ? require('react-dev-utils/ForkTsCheckerWarningWebpackPlugin')
@@ -562,23 +563,16 @@ module.exports = function (webpackEnv) {
     },
     plugins: [
       new webpack.container.ModuleFederationPlugin({
-        name: "mf-container",
-        // adds react as shared module
-        // version is inferred from package.json
-        // there is no version check for the required version
-        // so it will always use the higher version found
-        shared: {
-          react: {
-            import: 'react', // the "react" package will be used a provided and fallback module
-            shareKey: 'react', // under this name the shared module will be placed in the share scope
-            shareScope: 'default', // share scope with this name will be used
-            singleton: true, // only a single version of the shared module is allowed
-          },
-          'react-dom': {
-            singleton: true, // only a single version of the shared module is allowed
-          },
+        name: "mf_container",
+        remotes: {
+          mf_login: "mf_login@[mf_loginUrl]/remoteEntry.js",
         },
+        shared: {
+          react: { singleton: true },
+          "react-dom": { singleton: true },
+        }
       }),
+      new ExternalTemplateRemotesPlugin(),
       // Generates an `index.html` file with the <script> injected.
       new HtmlWebpackPlugin(
         Object.assign(

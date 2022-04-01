@@ -1,17 +1,8 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+// You can write your own logic here to determine the actual url
+//window.mf_loginUrl = 'https://frbbqyjw1ptv.compat.objectstorage.eu-frankfurt-1.oraclecloud.com/tecma-assets-coll/experimental_mf/mf_login';
+//@ts-nocheck
+window.mf_loginUrl = 'http://localhost:3002';
+// Use dynamic import here to allow webpack to interface with module federation code
+import('./bootstrap');
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+export {};

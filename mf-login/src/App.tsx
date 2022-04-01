@@ -4,7 +4,7 @@ import './App.css';
 function App() {
   const [username, setUsername] = useState<string>();
   const [password, setPassword] = useState<string>();
-  const [log, setLog] = useState<string>();
+  const [log, setLog] = useState<string>('Insert username and password');
 
   const onSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();

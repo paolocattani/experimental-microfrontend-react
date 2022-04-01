@@ -217,7 +217,8 @@ module.exports = function (webpackEnv) {
       // webpack uses `publicPath` to determine where the app is being served from.
       // It requires a trailing slash, or the file assets will get an incorrect path.
       // We inferred the "public path" (such as / or /my-project) from homepage.
-      publicPath: paths.publicUrlOrPath,
+      // FIXME:
+      publicPath: "auto",
       // Point sourcemap entries to original disk location (format as URL on Windows)
       devtoolModuleFilenameTemplate: isEnvProduction
         ? info =>
@@ -244,6 +245,7 @@ module.exports = function (webpackEnv) {
       level: 'none',
     },
     optimization: {
+      chunkIds: 'named',
       minimize: isEnvProduction,
       minimizer: [
         // This is only used in production mode
@@ -561,14 +563,6 @@ module.exports = function (webpackEnv) {
       ].filter(Boolean),
     },
     plugins: [
-      new webpack.container.ModuleFederationPlugin({
-        name: 'app2',
-        filename: 'remoteEntry.js',
-        exposes: {
-          './App': './src/App',
-        },
-        shared: { react: { singleton: true }, 'react-dom': { singleton: true } },
-      }),
       // Generates an `index.html` file with the <script> injected.
       new HtmlWebpackPlugin(
         Object.assign(
@@ -576,6 +570,9 @@ module.exports = function (webpackEnv) {
           {
             inject: true,
             template: paths.appHtml,
+            // FIXME:
+            publicPath: paths.publicUrlOrPath,
+            excludeChunks: ['mf_login'],
           },
           isEnvProduction
             ? {
@@ -590,7 +587,7 @@ module.exports = function (webpackEnv) {
                 minifyJS: true,
                 minifyCSS: true,
                 minifyURLs: true,
-              },
+              }
             }
             : undefined
         )
@@ -752,6 +749,17 @@ module.exports = function (webpackEnv) {
             }),
           },
         },
+      }),
+      new webpack.container.ModuleFederationPlugin({
+        name: 'mf_login',
+        filename: 'remoteEntry.js',
+        exposes: {
+          './App': paths.appAppJs
+        },
+        shared: {
+          react: { singleton: true },
+          "react-dom": { singleton: true },
+        }
       }),
     ].filter(Boolean),
     // Turn off performance processing because we utilize
