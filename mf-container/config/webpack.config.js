@@ -566,6 +566,7 @@ module.exports = function (webpackEnv) {
         name: "mf_container",
         remotes: {
           mf_login: "mf_login@[mf_loginUrl]/remoteEntry.js",
+          mf_private: "mf_private@[mf_privateUrl]/remoteEntry.js",
         },
         shared: {
           react: { singleton: true },
